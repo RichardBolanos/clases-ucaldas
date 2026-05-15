@@ -1,29 +1,28 @@
 // movie-card.ts
-// Componente con input() (recibe datos) y output() (emite eventos)
+// Componente de presentación reutilizable para mostrar una película
 import { Component, input, output } from '@angular/core';
-// input y output se importan del core de Angular (funciones, no decoradores)
+import { RouterLink } from '@angular/router';
+import { DecimalPipe } from '@angular/common';
 import { Movie } from '../../models/movie';
+import { TruncatePipe } from '../../shared/pipes/truncate.pipe';
+import { TmdbImagePipe } from '../../shared/pipes/tmdb-image.pipe';
 
 @Component({
   selector: 'app-movie-card',
   standalone: true,
-  imports: [],
+  imports: [RouterLink, DecimalPipe, TruncatePipe, TmdbImagePipe],
   templateUrl: './movie-card.html',
   styleUrls: ['./movie-card.scss']
 })
 export class MovieCard {
-  // Entrada: datos que recibe del padre (signals)
+  // Entrada: datos que recibe del padre
   movie = input.required<Movie>();
   esFavorita = input<boolean>(false);
 
   // Salida: evento que emite hacia el padre
-  // output<Movie>() crea un OutputEmitterRef que emite objetos Movie
   toggleFavorito = output<Movie>();
 
-  // Método que se ejecuta al hacer click en el botón de favorito
   onToggleFavorito(): void {
-    // .emit() envía el evento al padre con la película como dato
-    // this.movie() con paréntesis porque es un signal
     this.toggleFavorito.emit(this.movie());
   }
 }

@@ -1,0 +1,53 @@
+<!-- search-results.html -->
+<div class="container py-4">
+  <h2 class="mb-4">
+    @if (termino) {
+      Resultados para "{{ termino }}"
+      @if (totalResultados > 0) {
+        <small class="text-muted">({{ totalResultados }} encontradas)</small>
+      }
+    }
+  </h2>
+
+  @if (cargando) {
+    <div class="text-center py-5">
+      <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Buscando...</span>
+      </div>
+    </div>
+  } @else if (error) {
+    <div class="alert alert-danger">{{ error }}</div>
+  } @else if (resultados.length === 0) {
+    <div class="text-center py-5">
+      <p class="text-muted fs-5">No se encontraron películas para "{{ termino }}"</p>
+    </div>
+  } @else {
+    <div class="row g-4">
+      @for (movie of resultados; track movie.id) {
+        <div class="col-sm-6 col-md-4 col-lg-3 col-xl-2">
+          <app-movie-card
+            [movie]="movie"
+            [esFavorita]="esFavorita(movie.id)"
+            (toggleFavorito)="toggleFavorito($event)" />
+        </div>
+      }
+    </div>
+
+    <!-- Paginación -->
+    @if (totalPaginas > 1) {
+      <nav class="mt-4">
+        <ul class="pagination justify-content-center">
+          <li class="page-item" [class.disabled]="paginaActual === 1">
+            <button class="page-link" (click)="cambiarPagina(paginaActual - 1)">Anterior</button>
+          </li>
+          <li class="page-item disabled">
+            <span class="page-link">{{ paginaActual }} / {{ totalPaginas }}</span>
+          </li>
+          <li class="page-item" [class.disabled]="paginaActual === totalPaginas">
+            <button class="page-link" (click)="cambiarPagina(paginaActual + 1)">Siguiente</button>
+          </li>
+        </ul>
+      </nav>
+    }
+  }
+</div>

@@ -29,12 +29,21 @@ Angular usa un sistema de rutas para navegar entre vistas sin recargar la págin
 import { Routes } from '@angular/router';
 
 // Importar los componentes de cada página
-import { Home } from './features/home/home';
+// NOTA: NO importamos Home directamente. Todas las rutas usan lazy loading.
+// Esto evita problemas de detección de cambios en la primera carga
+// y mejora el tiempo de carga inicial.
 
 // Routes es un array de objetos que mapean URLs a componentes
 export const routes: Routes = [
   // Ruta raíz: muestra Home cuando la URL es "/"
-  { path: '', component: Home },
+  // Usa loadComponent (lazy loading) para que se cargue DESPUÉS de que
+  // la app esté completamente inicializada (HttpClient, interceptores, etc.)
+  {
+    path: '',
+    loadComponent: () =>
+      import('./features/home/home')
+        .then(m => m.Home)
+  },
 
   // Ruta con parámetro dinámico: :id se reemplaza por el ID real
   // /movie/550 → MovieDetail con params['id'] = '550'
@@ -45,14 +54,6 @@ export const routes: Routes = [
     loadComponent: () =>
       import('./features/movie-detail/movie-detail')
         .then(m => m.MovieDetail)
-  },
-
-  // Ruta de búsqueda (usa query params: /search?q=batman)
-  {
-    path: 'search',
-    loadComponent: () =>
-      import('./features/search-results/search-results')
-        .then(m => m.SearchResults)
   },
 
   // Ruta de favoritos
@@ -68,6 +69,8 @@ export const routes: Routes = [
   { path: '**', redirectTo: '' }
 ];
 ```
+
+💡 **Nota:** La ruta de búsqueda (`/search`) se agregará en el capítulo 6 cuando implementemos HttpClient y el buscador.
 
 ---
 

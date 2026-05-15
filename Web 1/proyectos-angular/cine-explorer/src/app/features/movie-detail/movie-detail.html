@@ -1,0 +1,97 @@
+<!-- movie-detail.html -->
+@if (cargando) {
+  <div class="text-center py-5">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Cargando...</span>
+    </div>
+  </div>
+} @else if (error) {
+  <div class="container py-4">
+    <div class="alert alert-danger">{{ error }}</div>
+    <a routerLink="/" class="btn btn-primary">Volver al inicio</a>
+  </div>
+} @else if (pelicula) {
+  <!-- Backdrop -->
+  <div class="backdrop" [style.backgroundImage]="'url(' + (pelicula.backdrop_path | tmdbImage:'original') + ')'">
+    <div class="backdrop-overlay"></div>
+  </div>
+
+  <div class="container py-4">
+    <div class="row">
+      <!-- Poster -->
+      <div class="col-md-4 mb-4">
+        <img [src]="pelicula.poster_path | tmdbImage:'w500'"
+             [alt]="pelicula.title"
+             class="img-fluid rounded shadow">
+      </div>
+
+      <!-- Info -->
+      <div class="col-md-8">
+        <h1>{{ pelicula.title }}</h1>
+        @if (pelicula.tagline) {
+          <p class="text-muted fst-italic">{{ pelicula.tagline }}</p>
+        }
+
+        <div class="d-flex flex-wrap gap-2 mb-3">
+          @for (genre of pelicula.genres; track genre.id) {
+            <span class="badge bg-primary">{{ genre.name }}</span>
+          }
+        </div>
+
+        <div class="mb-3">
+          <span class="me-3">⭐ {{ pelicula.vote_average | number:'1.1-1' }} / 10</span>
+          @if (pelicula.runtime) {
+            <span class="me-3">⏱️ {{ pelicula.runtime }} min</span>
+          }
+          <span>📅 {{ pelicula.release_date }}</span>
+        </div>
+
+        <p class="lead">{{ pelicula.overview }}</p>
+
+        <button class="btn"
+                [class.btn-danger]="esFavorita"
+                [class.btn-outline-danger]="!esFavorita"
+                (click)="toggleFavorito()">
+          {{ esFavorita ? '❤️ En favoritos' : '🤍 Agregar a favoritos' }}
+        </button>
+      </div>
+    </div>
+
+    <!-- Reparto -->
+    @if (creditos && creditos.cast.length > 0) {
+      <section class="mt-5">
+        <h3 class="mb-3">🎭 Reparto</h3>
+        <div class="row g-3">
+          @for (actor of creditos.cast.slice(0, 8); track actor.id) {
+            <div class="col-6 col-sm-4 col-md-3 col-lg-2">
+              <div class="text-center">
+                <img [src]="actor.profile_path | tmdbImage:'w185'"
+                     [alt]="actor.name"
+                     class="rounded-circle mb-2 cast-photo">
+                <p class="small mb-0 fw-bold">{{ actor.name }}</p>
+                <p class="small text-muted">{{ actor.character | truncate:20 }}</p>
+              </div>
+            </div>
+          }
+        </div>
+      </section>
+    }
+
+    <!-- Películas similares -->
+    @if (similares.length > 0) {
+      <section class="mt-5">
+        <h3 class="mb-3">🎬 Películas Similares</h3>
+        <div class="row g-4">
+          @for (movie of similares; track movie.id) {
+            <div class="col-sm-6 col-md-4 col-lg-3 col-xl-2">
+              <app-movie-card
+                [movie]="movie"
+                [esFavorita]="esFavoritaSimilar(movie.id)"
+                (toggleFavorito)="toggleFavoritoSimilar($event)" />
+            </div>
+          }
+        </div>
+      </section>
+    }
+  </div>
+}
