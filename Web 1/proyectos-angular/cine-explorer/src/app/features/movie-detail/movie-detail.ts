@@ -1,6 +1,6 @@
 // movie-detail.ts
 // Página de detalle de una película: info completa, créditos y similares
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { TmdbService } from '../../core/services/tmdb.service';
 import { FavoritesService } from '../../core/services/favorites.service';
@@ -21,6 +21,7 @@ export class MovieDetailComponent implements OnInit {
   private route = inject(ActivatedRoute);
   private tmdbService = inject(TmdbService);
   private favoritesService = inject(FavoritesService);
+  private cdr = inject(ChangeDetectorRef);
 
   pelicula: MovieDetail | null = null;
   creditos: Credits | null = null;
@@ -45,20 +46,28 @@ export class MovieDetailComponent implements OnInit {
       next: (data) => {
         this.pelicula = data;
         this.cargando = false;
+        this.cdr.markForCheck();
       },
       error: (err) => {
         this.error = err.message;
         this.cargando = false;
+        this.cdr.markForCheck();
       }
     });
 
     this.tmdbService.obtenerCreditos(id).subscribe({
-      next: (data) => this.creditos = data,
+      next: (data) => {
+        this.creditos = data;
+        this.cdr.markForCheck();
+      },
       error: () => {}
     });
 
     this.tmdbService.obtenerSimilares(id).subscribe({
-      next: (data) => this.similares = data.results.slice(0, 6),
+      next: (data) => {
+        this.similares = data.results.slice(0, 6);
+        this.cdr.markForCheck();
+      },
       error: () => {}
     });
   }

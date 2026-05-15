@@ -149,7 +149,7 @@ export class TmdbService {
 ```typescript
 // home.ts
 // Página principal que carga películas reales de la API
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, ChangeDetectorRef } from '@angular/core';
 import { MovieCard } from '../../components/movie-card/movie-card';
 import { TmdbService } from '../../services/tmdb.service';
 import { FavoritesService } from '../../services/favorites.service';
@@ -165,6 +165,10 @@ export class Home implements OnInit {
   // Inyectar los servicios
   private tmdbService = inject(TmdbService);
   private favoritesService = inject(FavoritesService);
+  // ChangeDetectorRef permite notificar a Angular que los datos cambiaron
+  // Lo necesitamos porque las respuestas HTTP pueden llegar en un momento
+  // en que Angular no está "escuchando" cambios (especialmente en la primera carga)
+  private cdr = inject(ChangeDetectorRef);
 
   // Estado del componente
   peliculas: Movie[] = [];     // lista de películas cargadas
@@ -189,11 +193,15 @@ export class Home implements OnInit {
         // response es de tipo MovieResponse (tipado automático)
         this.peliculas = response.results;
         this.cargando = false;
+        // markForCheck() le dice a Angular: "los datos cambiaron, actualizá la vista"
+        // Sin esto, el spinner puede quedarse girando para siempre en la primera carga
+        this.cdr.markForCheck();
       },
       error: (err) => {
         console.error('Error al cargar películas:', err);
         this.error = 'No se pudieron cargar las películas. Verifica tu conexión.';
         this.cargando = false;
+        this.cdr.markForCheck();
       }
     });
   }
@@ -265,7 +273,7 @@ En el capítulo 05 creamos un esqueleto. Ahora que tenemos HttpClient, lo comple
 ```typescript
 // movie-detail.ts
 // Página de detalle que carga datos reales de la API
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { TmdbService } from '../../services/tmdb.service';
 import { FavoritesService } from '../../services/favorites.service';
@@ -281,6 +289,7 @@ export class MovieDetail implements OnInit {
   private route = inject(ActivatedRoute);
   private tmdbService = inject(TmdbService);
   private favoritesService = inject(FavoritesService);
+  private cdr = inject(ChangeDetectorRef);
 
   // Estado del componente
   pelicula: MovieDetail | null = null;  // null mientras carga
@@ -301,10 +310,12 @@ export class MovieDetail implements OnInit {
       next: (data) => {
         this.pelicula = data;
         this.cargando = false;
+        this.cdr.markForCheck();
       },
       error: () => {
         this.error = 'No se pudo cargar la película';
         this.cargando = false;
+        this.cdr.markForCheck();
       }
     });
   }
@@ -312,7 +323,10 @@ export class MovieDetail implements OnInit {
   // Cargar créditos (reparto)
   cargarCreditos(id: number): void {
     this.tmdbService.obtenerCreditos(id).subscribe({
-      next: (data) => this.creditos = data
+      next: (data) => {
+        this.creditos = data;
+        this.cdr.markForCheck();
+      }
     });
   }
 
@@ -452,7 +466,7 @@ export class MovieDetail implements OnInit {
 ```typescript
 // search-results.ts
 // Página que muestra resultados de búsqueda leyendo el query param "q"
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { TmdbService } from '../../services/tmdb.service';
 import { FavoritesService } from '../../services/favorites.service';
@@ -469,6 +483,7 @@ export class SearchResults implements OnInit {
   private route = inject(ActivatedRoute);
   private tmdbService = inject(TmdbService);
   private favoritesService = inject(FavoritesService);
+  private cdr = inject(ChangeDetectorRef);
 
   resultados: Movie[] = [];
   termino: string = '';
@@ -491,9 +506,11 @@ export class SearchResults implements OnInit {
       next: (response) => {
         this.resultados = response.results;
         this.cargando = false;
+        this.cdr.markForCheck();
       },
       error: () => {
         this.cargando = false;
+        this.cdr.markForCheck();
       }
     });
   }
@@ -661,6 +678,7 @@ export const appConfig: ApplicationConfig = {
 | `.subscribe()` | Suscribirse para recibir los datos |
 | `catchError` | Manejar errores en el servicio |
 | Interceptores | Modificar todas las peticiones automáticamente |
+| `ChangeDetectorRef` | Notificar a Angular que los datos cambiaron |
 | Estados de carga | Spinner, error, datos (UX) |
 
 ---

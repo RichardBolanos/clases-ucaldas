@@ -1,6 +1,6 @@
 // genre-filter.ts
 // Página que muestra películas filtradas por género
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { TmdbService } from '../../core/services/tmdb.service';
 import { FavoritesService } from '../../core/services/favorites.service';
@@ -17,6 +17,7 @@ export class GenreFilter implements OnInit {
   private route = inject(ActivatedRoute);
   private tmdbService = inject(TmdbService);
   private favoritesService = inject(FavoritesService);
+  private cdr = inject(ChangeDetectorRef);
 
   peliculas: Movie[] = [];
   generoActual: Genre | null = null;
@@ -51,10 +52,12 @@ export class GenreFilter implements OnInit {
         this.totalPaginas = data.total_pages;
         this.generoActual = this.generos.find(g => g.id === genreId) || { id: genreId, name: 'Género' };
         this.cargando = false;
+        this.cdr.markForCheck();
       },
       error: (err) => {
         this.error = err.message;
         this.cargando = false;
+        this.cdr.markForCheck();
       }
     });
   }

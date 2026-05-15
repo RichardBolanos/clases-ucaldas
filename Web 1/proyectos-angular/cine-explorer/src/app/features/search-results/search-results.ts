@@ -1,6 +1,6 @@
 // search-results.ts
 // Página de resultados de búsqueda con paginación
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { TmdbService } from '../../core/services/tmdb.service';
 import { FavoritesService } from '../../core/services/favorites.service';
@@ -17,6 +17,7 @@ export class SearchResults implements OnInit {
   private route = inject(ActivatedRoute);
   private tmdbService = inject(TmdbService);
   private favoritesService = inject(FavoritesService);
+  private cdr = inject(ChangeDetectorRef);
 
   resultados: Movie[] = [];
   termino = '';
@@ -46,10 +47,12 @@ export class SearchResults implements OnInit {
         this.totalPaginas = data.total_pages;
         this.totalResultados = data.total_results;
         this.cargando = false;
+        this.cdr.markForCheck();
       },
       error: (err) => {
         this.error = err.message;
         this.cargando = false;
+        this.cdr.markForCheck();
       }
     });
   }
