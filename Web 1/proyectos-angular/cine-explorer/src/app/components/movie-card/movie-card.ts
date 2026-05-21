@@ -2,15 +2,15 @@
 // Componente de presentación reutilizable para mostrar una película
 import { Component, input, output } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { DecimalPipe } from '@angular/common';
 import { Movie } from '../../models/movie';
 import { TruncatePipe } from '../../shared/pipes/truncate.pipe';
 import { TmdbImagePipe } from '../../shared/pipes/tmdb-image.pipe';
+import { StarsPipe } from '../../shared/pipes/stars.pipe';
 
 @Component({
   selector: 'app-movie-card',
   standalone: true,
-  imports: [RouterLink, DecimalPipe, TruncatePipe, TmdbImagePipe],
+  imports: [RouterLink, TruncatePipe, TmdbImagePipe, StarsPipe],
   templateUrl: './movie-card.html',
   styleUrls: ['./movie-card.scss']
 })

@@ -1,25 +1,31 @@
 <!-- movie-card.html -->
+<!-- Tarjeta usando pipes personalizados -->
 <div class="card shadow-sm h-100">
-  <img
-    [src]="movie().poster_path | tmdbImage:'w500'"
-    [alt]="movie().title"
-    class="card-img-top"
-    loading="lazy">
+  <!-- tmdbImage pipe construye la URL completa de la imagen -->
+  <img [src]="movie().poster_path | tmdbImage:'w500'"
+       [alt]="movie().title"
+       class="card-img-top"
+       loading="lazy">
 
   <div class="card-body d-flex flex-column">
     <h5 class="card-title">{{ movie().title }}</h5>
-    <p class="text-muted mb-2">⭐ {{ movie().vote_average | number:'1.1-1' }} / 10</p>
+
+    <!-- stars pipe convierte 8.4 → "★★★★☆" -->
+    <p class="mb-1">{{ movie().vote_average | stars }}</p>
+    <small class="text-muted mb-2">{{ movie().vote_average }} / 10</small>
+
+    <!-- truncate pipe corta el texto a 120 caracteres -->
     <p class="card-text flex-grow-1">{{ movie().overview | truncate:120 }}</p>
 
     <div class="d-flex gap-2 mt-auto">
-      <a [routerLink]="['/movie', movie().id]" class="btn btn-outline-primary flex-grow-1">
+      <a [routerLink]="['/movie', movie().id]"
+         class="btn btn-outline-primary flex-grow-1">
         Ver detalle
       </a>
-      <button
-        class="btn"
-        [class.btn-danger]="esFavorita()"
-        [class.btn-outline-danger]="!esFavorita()"
-        (click)="onToggleFavorito()">
+      <button class="btn"
+              [class.btn-danger]="esFavorita()"
+              [class.btn-outline-danger]="!esFavorita()"
+              (click)="onToggleFavorito()">
         {{ esFavorita() ? '❤️' : '🤍' }}
       </button>
     </div>

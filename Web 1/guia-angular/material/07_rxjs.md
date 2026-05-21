@@ -139,7 +139,7 @@ import { RouterLink, RouterLinkActive, Router } from '@angular/router';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 // Operadores RxJS para el buscador
 import { debounceTime, distinctUntilChanged, filter } from 'rxjs';
-import { FavoritesService } from '../../services/favorites.service';
+import { FavoritesService } from '../../core/services/favorites.service';
 
 @Component({
   selector: 'app-navbar',

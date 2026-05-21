@@ -90,7 +90,7 @@ ng g p pipes/truncate    # Atajo
 
 ### TruncatePipe — Truncar texto largo
 
-📁 Crear `src/app/pipes/truncate.pipe.ts`:
+📁 Crear `src/app/shared/pipes/truncate.pipe.ts`:
 
 ```typescript
 // truncate.pipe.ts
@@ -122,7 +122,7 @@ export class TruncatePipe implements PipeTransform {
 
 ### TmdbImagePipe — Construir URLs de imágenes TMDB
 
-📁 Crear `src/app/pipes/tmdb-image.pipe.ts`:
+📁 Crear `src/app/shared/pipes/tmdb-image.pipe.ts`:
 
 ```typescript
 // tmdb-image.pipe.ts
@@ -155,7 +155,7 @@ export class TmdbImagePipe implements PipeTransform {
 
 ### StarsPipe — Convertir puntuación a estrellas
 
-📁 Crear `src/app/pipes/stars.pipe.ts`:
+📁 Crear `src/app/shared/pipes/stars.pipe.ts`:
 
 ```typescript
 // stars.pipe.ts
@@ -195,9 +195,9 @@ import { Component, input, output } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { Movie } from '../../models/movie';
 // Importar los pipes personalizados
-import { TruncatePipe } from '../../pipes/truncate.pipe';
-import { TmdbImagePipe } from '../../pipes/tmdb-image.pipe';
-import { StarsPipe } from '../../pipes/stars.pipe';
+import { TruncatePipe } from '../../shared/pipes/truncate.pipe';
+import { TmdbImagePipe } from '../../shared/pipes/tmdb-image.pipe';
+import { StarsPipe } from '../../shared/pipes/stars.pipe';
 
 @Component({
   selector: 'app-movie-card',

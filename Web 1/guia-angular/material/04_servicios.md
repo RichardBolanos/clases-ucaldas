@@ -106,10 +106,10 @@ Vamos a mover la lógica de favoritos del `App` a un servicio dedicado.
 📁 Crear el servicio:
 
 ```bash
-ng g s services/favorites --skip-tests
+ng g s core/services/favorites --skip-tests
 ```
 
-✏️ `src/app/services/favorites.service.ts`:
+✏️ `src/app/core/services/favorites.service.ts`:
 
 ```typescript
 // favorites.service.ts
@@ -180,7 +180,7 @@ import { Component, inject } from '@angular/core';
 import { MovieCard } from './components/movie-card/movie-card';
 import { Movie } from './models/movie';
 // Importar el servicio
-import { FavoritesService } from './services/favorites.service';
+import { FavoritesService } from './core/services/favorites.service';
 
 @Component({
   selector: 'app-root',

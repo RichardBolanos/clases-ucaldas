@@ -133,7 +133,7 @@ import { Component, inject } from '@angular/core';
 // RouterLink reemplaza href para navegación sin recarga
 // RouterLinkActive agrega una clase CSS cuando la ruta coincide
 import { RouterLink, RouterLinkActive } from '@angular/router';
-import { FavoritesService } from '../../services/favorites.service';
+import { FavoritesService } from '../../core/services/favorites.service';
 
 @Component({
   selector: 'app-navbar',
@@ -224,7 +224,7 @@ ng g c features/home --skip-tests
 // Página principal que muestra películas populares
 import { Component, inject } from '@angular/core';
 import { MovieCard } from '../../components/movie-card/movie-card';
-import { FavoritesService } from '../../services/favorites.service';
+import { FavoritesService } from '../../core/services/favorites.service';
 import { Movie } from '../../models/movie';
 
 @Component({
@@ -305,7 +305,7 @@ ng g c features/favorites --skip-tests
 // Página que muestra las películas marcadas como favoritas
 import { Component, inject } from '@angular/core';
 import { MovieCard } from '../../components/movie-card/movie-card';
-import { FavoritesService } from '../../services/favorites.service';
+import { FavoritesService } from '../../core/services/favorites.service';
 import { Movie } from '../../models/movie';
 
 @Component({

@@ -43,7 +43,7 @@ export const appConfig: ApplicationConfig = {
 
 ## 6.2 Crear el servicio TmdbService
 
-✏️ Modificar `src/app/services/tmdb.service.ts`:
+✏️ Modificar `src/app/core/services/tmdb.service.ts`:
 
 ```typescript
 // tmdb.service.ts
@@ -151,8 +151,8 @@ export class TmdbService {
 // Página principal que carga películas reales de la API
 import { Component, OnInit, inject, ChangeDetectorRef } from '@angular/core';
 import { MovieCard } from '../../components/movie-card/movie-card';
-import { TmdbService } from '../../services/tmdb.service';
-import { FavoritesService } from '../../services/favorites.service';
+import { TmdbService } from '../../core/services/tmdb.service';
+import { FavoritesService } from '../../core/services/favorites.service';
 import { Movie } from '../../models/movie';
 
 @Component({
@@ -275,8 +275,8 @@ En el capítulo 05 creamos un esqueleto. Ahora que tenemos HttpClient, lo comple
 // Página de detalle que carga datos reales de la API
 import { Component, OnInit, inject, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
-import { TmdbService } from '../../services/tmdb.service';
-import { FavoritesService } from '../../services/favorites.service';
+import { TmdbService } from '../../core/services/tmdb.service';
+import { FavoritesService } from '../../core/services/favorites.service';
 import { MovieDetail, Credits } from '../../models/movie';
 
 @Component({
@@ -468,8 +468,8 @@ export class MovieDetail implements OnInit {
 // Página que muestra resultados de búsqueda leyendo el query param "q"
 import { Component, OnInit, inject, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { TmdbService } from '../../services/tmdb.service';
-import { FavoritesService } from '../../services/favorites.service';
+import { TmdbService } from '../../core/services/tmdb.service';
+import { FavoritesService } from '../../core/services/favorites.service';
 import { MovieCard } from '../../components/movie-card/movie-card';
 import { Movie } from '../../models/movie';
 
@@ -596,7 +596,7 @@ obtenerPopulares(page: number = 1): Observable<MovieResponse> {
 
 Los interceptores modifican TODAS las peticiones HTTP automáticamente. Caso típico: agregar la API key a cada petición.
 
-📁 Crear `src/app/interceptors/api-key.interceptor.ts`:
+📁 Crear `src/app/core/interceptors/auth.interceptor.ts`:
 
 ```typescript
 // api-key.interceptor.ts
@@ -629,7 +629,7 @@ export const apiKeyInterceptor: HttpInterceptorFn = (req, next) => {
 ```typescript
 // app.config.ts
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
-import { apiKeyInterceptor } from './interceptors/api-key.interceptor';
+import { apiKeyInterceptor } from './core/interceptors/api-key.interceptor';
 
 export const appConfig: ApplicationConfig = {
   providers: [
