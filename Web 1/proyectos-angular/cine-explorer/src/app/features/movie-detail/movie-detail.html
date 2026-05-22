@@ -43,7 +43,8 @@
           @if (pelicula.runtime) {
             <span class="me-3">⏱️ {{ pelicula.runtime }} min</span>
           }
-          <span>📅 {{ pelicula.release_date }}</span>
+          <span class="me-3">📅 {{ pelicula.release_date }}</span>
+          <span>🌐 {{ pelicula.original_language | uppercase }}</span>
         </div>
 
         <p class="lead">{{ pelicula.overview }}</p>

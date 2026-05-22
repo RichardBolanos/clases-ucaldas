@@ -2,7 +2,7 @@
 // Página de detalle de una película: info completa, créditos y similares
 import { Component, OnInit, inject, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
-import { DecimalPipe } from '@angular/common';
+import { DecimalPipe, UpperCasePipe } from '@angular/common';
 import { TmdbService } from '../../core/services/tmdb.service';
 import { FavoritesService } from '../../core/services/favorites.service';
 import { TmdbImagePipe } from '../../shared/pipes/tmdb-image.pipe';
@@ -14,7 +14,7 @@ import { MovieDetail, Credits, Movie } from '../../models/movie';
 @Component({
   selector: 'app-movie-detail',
   standalone: true,
-  imports: [TmdbImagePipe, TruncatePipe, MovieCard, RouterLink, DecimalPipe, ReviewForm],
+  imports: [TmdbImagePipe, TruncatePipe, MovieCard, RouterLink, DecimalPipe, UpperCasePipe, ReviewForm],
   templateUrl: './movie-detail.html',
   styleUrls: ['./movie-detail.scss']
 })

@@ -244,6 +244,149 @@ ng g c features/movie-detail/review-form --skip-tests
 
 Este formulario se mostrará dentro de la página de detalle de película para que los usuarios puedan escribir reseñas.
 
+✏️ `review-form.ts`:
+
+```typescript
+// review-form.ts
+// Componente de formulario de reseña usando Reactive Forms
+import { Component, inject } from '@angular/core';
+import { FormBuilder, Validators, ReactiveFormsModule } from '@angular/forms';
+
+@Component({
+  selector: 'app-review-form',
+  standalone: true,
+  imports: [ReactiveFormsModule],
+  templateUrl: './review-form.html'
+})
+export class ReviewForm {
+  // Inyectar FormBuilder para crear el formulario de forma concisa
+  private fb = inject(FormBuilder);
+
+  // Formulario con validaciones
+  formulario = this.fb.group({
+    titulo: ['', [Validators.required, Validators.minLength(3)]],
+    contenido: ['', [Validators.required, Validators.minLength(20)]],
+    puntuacion: [5, [Validators.required, Validators.min(1), Validators.max(10)]],
+    recomendada: [true]
+  });
+
+  // Estado del formulario
+  enviado = false;
+
+  // Helper para verificar errores de forma más limpia
+  tieneError(campo: string, error: string): boolean {
+    const control = this.formulario.get(campo);
+    return !!control?.hasError(error) && !!control?.touched;
+  }
+
+  // Se ejecuta al enviar el formulario
+  onSubmit(): void {
+    if (this.formulario.valid) {
+      console.log('Datos de la reseña:', this.formulario.value);
+      this.enviado = true;
+      // Resetear el formulario después de enviar
+      this.formulario.reset({ puntuacion: 5, recomendada: true });
+    }
+  }
+}
+```
+
+✏️ `review-form.html`:
+
+```html
+<!-- review-form.html -->
+<!-- Formulario de reseña con Reactive Forms y validación -->
+<div class="card mt-4">
+  <div class="card-body">
+    <h4 class="card-title mb-3">✍️ Escribir una reseña</h4>
+
+    @if (enviado) {
+      <div class="alert alert-success">
+        ¡Reseña publicada exitosamente! 🎉
+      </div>
+    }
+
+    <form [formGroup]="formulario" (ngSubmit)="onSubmit()">
+
+      <!-- Campo: Título -->
+      <div class="mb-3">
+        <label for="titulo" class="form-label">Título de la reseña</label>
+        <input id="titulo" formControlName="titulo" class="form-control"
+               [class.is-invalid]="formulario.get('titulo')?.invalid
+                                   && formulario.get('titulo')?.touched"
+               placeholder="Ej: Una obra maestra del cine">
+        @if (tieneError('titulo', 'required')) {
+          <div class="invalid-feedback">El título es requerido</div>
+        }
+        @if (tieneError('titulo', 'minlength')) {
+          <div class="invalid-feedback">Mínimo 3 caracteres</div>
+        }
+      </div>
+
+      <!-- Campo: Contenido -->
+      <div class="mb-3">
+        <label for="contenido" class="form-label">Tu reseña</label>
+        <textarea id="contenido" formControlName="contenido"
+                  class="form-control" rows="4"
+                  [class.is-invalid]="formulario.get('contenido')?.invalid
+                                      && formulario.get('contenido')?.touched"
+                  placeholder="Escribe tu opinión sobre la película...">
+        </textarea>
+        @if (tieneError('contenido', 'required')) {
+          <div class="invalid-feedback">La reseña es requerida</div>
+        }
+        @if (tieneError('contenido', 'minlength')) {
+          <div class="invalid-feedback">Mínimo 20 caracteres</div>
+        }
+      </div>
+
+      <!-- Campo: Puntuación -->
+      <div class="mb-3">
+        <label for="puntuacion" class="form-label">
+          Puntuación: {{ formulario.get('puntuacion')?.value }} / 10
+        </label>
+        <input id="puntuacion" formControlName="puntuacion"
+               type="range" class="form-range" min="1" max="10">
+      </div>
+
+      <!-- Campo: Recomendada -->
+      <div class="form-check mb-3">
+        <input id="recomendada" formControlName="recomendada"
+               type="checkbox" class="form-check-input">
+        <label for="recomendada" class="form-check-label">
+          La recomiendo
+        </label>
+      </div>
+
+      <!-- Botón de enviar -->
+      <button type="submit" class="btn btn-primary"
+              [disabled]="formulario.invalid">
+        Publicar reseña
+      </button>
+    </form>
+  </div>
+</div>
+```
+
+✏️ Agregar `ReviewForm` a los imports de `movie-detail.ts` y usar `<app-review-form />` en el template:
+
+```typescript
+// movie-detail.ts — agregar a los imports del componente
+import { ReviewForm } from './review-form/review-form';
+
+@Component({
+  // ...
+  imports: [/* ...otros imports */, ReviewForm],
+})
+```
+
+```html
+<!-- movie-detail.html — agregar al final, antes de cerrar el container -->
+<section class="mt-5 mb-4">
+  <app-review-form />
+</section>
+```
+
 ---
 
 ## 8.7 Compilar y probar
