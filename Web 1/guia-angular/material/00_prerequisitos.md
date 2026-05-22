@@ -90,6 +90,24 @@ ng serve
 # Abrir en el navegador: http://localhost:4200
 ```
 
+⚠️ **IMPORTANTE:** Si por error seleccionaron "Yes" en Server-Side Rendering, deben deshabilitarlo. SSR agrega complejidad innecesaria para este curso y causa errores con `window` y `localStorage`. Para deshabilitarlo:
+
+```bash
+# 1. Eliminar los archivos de SSR
+rm -f src/server.ts src/main.server.ts src/app/app.routes.server.ts
+
+# 2. Desinstalar el paquete
+npm uninstall @angular/ssr
+
+# 3. En angular.json, verificar que NO existan estas líneas en architect > build > options:
+#    "server": "src/main.server.ts"
+#    "ssr": { ... }
+#    "prerender": { ... }
+#    Si existen, eliminarlas.
+```
+
+Alternativamente, pueden recrear el proyecto desde cero con `ng new cine-explorer --style=scss --routing --ssr=false`.
+
 💡 `ng serve` tiene hot reload: cada vez que guardan un archivo, el navegador se actualiza automáticamente.
 
 ---
