@@ -26,12 +26,11 @@
         </li>
       </ul>
 
-      <!-- Buscador -->
+      <!-- Buscador reactivo con FormControl -->
       <form class="d-flex me-2" (ngSubmit)="buscar()">
         <input class="form-control me-2" type="search"
                placeholder="Buscar películas..."
-               [(ngModel)]="terminoBusqueda"
-               name="busqueda"
+               [formControl]="searchControl"
                aria-label="Buscar películas">
         <button class="btn btn-outline-light" type="submit">🔍</button>
       </form>
