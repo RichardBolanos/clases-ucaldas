@@ -27,7 +27,24 @@ Un Fragment es una porción reutilizable de interfaz que vive dentro de una Acti
 
 ---
 
-## 10.2 Crear el menú de navegación
+## 10.2 Agregar dependencia de Fragment KTX
+
+Para usar `activityViewModels()` (que permite compartir un ViewModel entre la Activity y sus Fragments), necesitamos agregar la dependencia `fragment-ktx`.
+
+✏️ En `app/build.gradle.kts`, agregar dentro del bloque `dependencies`:
+
+```kotlin
+// Fragment KTX: activityViewModels() para compartir ViewModel entre Fragments (Capítulo 10)
+implementation("androidx.fragment:fragment-ktx:1.7.1")
+```
+
+> **¿Por qué?** La función `activityViewModels()` no viene incluida en las dependencias base de Android. Vive en el artefacto `androidx.fragment:fragment-ktx`. Sin esta dependencia, el import `import androidx.fragment.app.activityViewModels` no se resuelve y la compilación falla.
+
+Después de agregar la dependencia, hacer **Sync Now** en Android Studio.
+
+---
+
+## 10.3 Crear el menú de navegación
 
 📁 Crear la carpeta `app/src/main/res/menu/` si no existe.
 
@@ -66,7 +83,7 @@ Un Fragment es una porción reutilizable de interfaz que vive dentro de una Acti
 
 ---
 
-## 10.3 Crear los layouts de los Fragments
+## 10.4 Crear los layouts de los Fragments
 
 📁 Crear `app/src/main/res/layout/fragment_inicio.xml`:
 
@@ -362,7 +379,7 @@ Un Fragment es una porción reutilizable de interfaz que vive dentro de una Acti
 
 ---
 
-## 10.4 Crear las clases de los Fragments
+## 10.5 Crear las clases de los Fragments
 
 📁 Crear `app/src/main/java/com/ejemplo/misfinanzas/InicioFragment.kt`:
 
@@ -662,7 +679,7 @@ class EstadisticasFragment : Fragment() {
 
 ---
 
-## 10.5 Actualizar el layout de MainActivity
+## 10.6 Actualizar el layout de MainActivity
 
 ✏️ Reemplazar `activity_main.xml` con el contenedor de Fragments y el BottomNavigationView:
 
@@ -701,7 +718,7 @@ class EstadisticasFragment : Fragment() {
 
 ---
 
-## 10.6 Actualizar MainActivity para manejar Fragments
+## 10.7 Actualizar MainActivity para manejar Fragments
 
 ✏️ Modificar `MainActivity.kt`:
 
@@ -771,7 +788,7 @@ class MainActivity : AppCompatActivity() {
 
 ---
 
-## 10.7 Compilar y probar
+## 10.8 Compilar y probar
 
 ▶️ Compilar y ejecutar. Deberían ver:
 1. Tres pestañas en la parte inferior: Inicio, Movimientos, Estadísticas
